@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>숫자 야구 프로그램</title>
+</head>
+<body>
+  <form id="form">
+    <input type="text">
+    <button>입력</button>
+  </form>
+  <div id="logs"></div>
+  <script>
+    // 정답 번호 만들기 (중복되지 않는 번호 4자리)
+    
+    // 1 ~ 9까지 배열 만들기
+    let ascending = [];
+    for(let i = 0; i < 9; i++){
+      ascending.push(i + 1);
+    }
+
+    // 정답을 담을 배열
+    let numbers = [];
+
+    // 4자리 숫자 numbers에 저장
+    for(let i = 0; i < 4; i++){
+      const index = Math.floor(Math.random() * ascending.length); // random number
+      numbers.push(ascending[index]);
+      ascending.splice(index,1);
+    }
+    console.log(ascending);
+    console.log(numbers);
+
+    // 사용자의 값 입력 받기 < input에 id를 이용하지 말고 >
+    const $form = document.querySelector("#form");
+    let tries = []; // 시도했던 번호들 저장
+    const $logs = document.querySelector("#logs");
+
+    // 입력 받은 값의 오류 확인 함수
+    function inputChecker(inputValue) {
+      // 4글자가 아닐때, 중복도 체크
+      if(inputValue.length !== 4) {
+        return alert("길이가 4가 아닙니다!");
+      }
+
+      if(new Set(inputValue).size !== 4){
+        return alert("값이 중복입니다!");
+      }
+
+      // 이미 나왔던 값 일때
+      if(tries.includes(inputValue)){
+        return alert("이미 나왔던 값입니다!")
+      }
+      
+      return true;
+    }
+
+    // 스트라이크, 볼 개수 확인
+    function ballChecker(inputValue, numbers){
+      let strike = 0;
+      let ball = 0;
+      
+      for(let i = 0; i < 4; i++){
+        const index2 = numbers.indexOf(parseInt(inputValue[i]));
+        if(index2 > -1){
+          // 스트라이크 일 경우
+          if(numbers[index2] == inputValue[index2]) {strike+=1;}
+          // 볼일 경우 
+          else {ball+=1;}
+        }
+      }
+      $logs.append(`${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+    }
+
+    // 값 입력 받기
+    $form.addEventListener("submit",() => {
+      event.preventDefault(); // 해당 form의 기본값(새로고침)을 없애기
+      let inputValue = event.target[0].value; // 입력 받은 값을 저장
+      event.target[0].value = "";
+
+      // 입력 받은 값의 오류 확인
+      if(inputChecker(inputValue)){ // 오류가 없을때       
+        tries.push(inputValue); 
+        // 홈런인지 확인
+        if(inputValue === numbers.join("")){
+          $logs.textContent = "홈런!!";
+        } else {
+        // 홈런이 아닐때 / strike, ball 개수 표시
+          ballChecker(inputValue, numbers);
+          // 만약 기회 10번을 넘었을때
+          if(tries.length > 2) {
+            $logs.append(`정답은 ${numbers.join("")} 입니다! 패배`);
+          }
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
