@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로또 추첨기</title>
+  <style>
+    .ball {
+      display : inline-block;
+      border : 1px solid black;
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      font-size : 20px;
+      text-align: center;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <form id="form">
+    <input name="inp" placeholder="숫자 6개를 쉼표로 구분해 입력해주세요."/>
+    <button>추첨</button>
+  </form>
+  <div id="out">추첨 번호 : </div>
+  <div id="bonus">보너스 번호 : </div>
+</body>
+<script>
+  // 변수 정의
+  let array = Array(45).fill(0).map((v,i) => i + 1);
+  let randList = []
+  for(;array.length;){
+    const idx = Math.floor(Math.random() * array.length);
+    randList.push(array[idx]);
+    array.splice(idx,1);
+  }
+  const lotto = randList.slice(0,6).sort((a,b)=> a-b);
+  const bonus = randList[6];
+  let drwaSwich = true;
+  let count = 0;
+
+  // html 태그와 연결 변수
+  const $form = document.querySelector("#form");
+  const $out = document.querySelector("#out");
+  const $bonus = document.querySelector("#bonus");
+
+  // 이벤트 발생의 함수
+
+  // 1. 입력 받고 오류 체크
+  function checkInp($target) {
+    // 공백 입력시
+    if(!$target.value.trim()){
+      return alert("공백 입니다.");
+    }    
+
+    // 6자리가 아닐때
+    const tarLength = $target.value.split(',');
+    if(tarLength.length !== 6){
+      return alert("6자리가 아닙니다.");
+    }
+    
+    // 중복이 있을때
+    const val = new Set(tarLength).size;
+    if(val !== 6){
+      return alert("중복이 있습니다.");
+    }
+    
+    // 1 ~ 45 이외의 값을 넣었을때
+    if(tarLength.find((v)=> v > 45 || v < 1)){
+      return alert('1부터 45까지만 입력할 수 있습니다.');
+    }
+    
+    // 이미 한번 추첨되었을때
+    if(!drwaSwich){
+      return alert("이미 추첨 되었습니다.");
+    }
+
+    return true;
+  }
+
+  // 추첨 번호의 숫자에 따른 색깔 변화
+  function colorize(number, $tag){
+    if( number < 10){
+      $tag.style.backgroundColor ='red';
+      $tag.style.color ='white';
+    }
+    else if( number < 20){
+      $tag.style.backgroundColor ='orange';
+    }
+    else if( number < 30){
+      $tag.style.backgroundColor ='yellow';
+    }
+    else if( number < 40){
+      $tag.style.backgroundColor ='blue';
+      $tag.style.color ='white';
+    }
+    else {
+      $tag.style.backgroundColor = "green";
+      $tag.style.color ='white';
+    }
+  }
+
+  // setTimeout의 실행 부분 함수화
+  function drawBall (value, $target){
+    const $ball =document.createElement("span");
+    $ball.className ="ball";
+    $ball.textContent = value;
+    colorize(value,$ball);
+    $target.appendChild($ball);
+  }
+
+  // async/await를 사용하여 비동기화인 setTimeout를 동기화 코드로 만들기
+    const setTimeoutPromise = (ms) => new Promise((resolve, reject) => {
+      setTimeout(resolve,ms);
+    });
+
+  // 이벤트 발생
+  $form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const $inp = event.target.inp;
+
+    // 입력 받고 오류 체크 
+    if(checkInp($inp)){
+      drwaSwich = false; // 추첨 버튼 컨트롤러
+      // 번호 출력 
+      for(let i = 0; i < 6; i++){
+        await setTimeoutPromise(1000);
+        drawBall(lotto[i],$out);
+      }
+      await setTimeoutPromise(1000);
+      drawBall(bonus,$bonus);   
+
+      await setTimeoutPromise(500);
+      // 당첨 등수 출력
+      const setMyNum = $inp.value.split(','); // [1,2,3,4,5,6] => ["1","2","3","4","5","6"]
+      setMyNum.forEach((v,i)=> {
+        if(lotto.includes(parseInt(v))){
+          count++;
+        }
+      });
+
+      if(count === 6){
+        alert("1등 당첨");
+      }
+      else if(count === 5 && lotto.includes(string(bonus))){
+        alert("2등 당첨");
+      }
+      else if(count === 5){
+        alert("3등 당첨");
+      }
+      else if(count === 4){
+        alert("4등 당첨");
+      }
+      else if(count === 3){
+        alert("5등 당첨");
+      }
+      else{
+        alert("실패..")
+      }   
+    }  
+  });
+
+</script>
+</html>
