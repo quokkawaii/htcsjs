@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반응 속도 테스트</title>
+<style>
+  #screen {
+    width: 300px;
+    height: 200px;
+    text-align: center;
+    user-select: none;
+    line-height: 175px;
+  }
+  #screen.waiting{
+    background-color: aqua;
+  }
+  #screen.ready{
+    background-color: pink;
+  }
+  #screen.now{
+    background-color: greenyellow;
+  }
+  #screen.end{
+    background-color: gray;
+  }
+  #retry{
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div id="screen" class="waiting">클릭해서 시작</div>
+<div id="result"></div>
+<button id="retry">다시하기</button>
+<script>
+  const $screen = document.querySelector("#screen");
+  const $result = document.querySelector("#result");
+  const $retry = document.querySelector("#retry");
+
+  // 클래스의 이름 확인 하는 방법, 리턴 값 string
+  // const string = $screen.className;
+
+  // ms 체크
+  let start;
+  let end;
+  let ms;
+
+  // ms를 저장할 배열 
+  let response = [];
+
+  // 빨간 화면 흐름 제어
+  let timeoutId;
+
+  // 화면 바꾸기
+  $screen.addEventListener('click',()=> {
+    //파란색
+    if($screen.className ==="waiting"){
+      // 화면이 전환되야함
+      $screen.className = "ready";
+      $screen.textContent = "초록색이 되면 클릭!!";
+
+      // 빨간색 화면에서 자동으로 바껴야 함으로 setTimeout은 파란색에 정의
+        timeoutId = setTimeout(() => {
+        $screen.className = "now";
+        start = new Date();
+      },Math.random() * (3 * 1000) + 1000);
+
+    }// 빨간색
+    else if ($screen.className ==="ready"){
+      // 빨간색일때 클릭시 생기는 이벤트 => 오류창?
+      clearTimeout(timeoutId);
+      $screen.className = "waiting";
+      $screen.textContent = "성급하게 눌렀음, 클릭시 재시도";
+
+    }// 초록색
+    else if($screen.className === "now"){
+      // 반응속도의 값을 저장하는 함수 when? click
+      end = new Date();
+      ms = end - start;
+      response.push(ms + "ms ");
+      $screen.className = "waiting";
+      $screen.textContent = "클릭해서 시작";
+      $result.textContent = `속도 : ${response}`;
+      end = null;
+      start = null;
+
+      if(response.length >= 5){
+        $screen.className = "end";
+        $screen.textContent = "End";
+        let val = response.reduce((a,c) => {
+          return parseInt(a) + parseInt(c);
+        });
+        $result.append(document.createElement('br'),'평균 : ', (val / 5) ,"ms");
+        $retry.style.display = 'block';
+      }
+    }
+  });
+
+  // 다시하기 버튼 구현
+  
+  const clear = () => {
+    response = [];
+    $result.textContent = "";
+    $retry.style.display = "none";
+  }
+
+  $retry.addEventListener("click",() => {
+    clear();
+    $screen.className = "waiting";
+    $screen.textContent = "클릭해서 시작";
+  })
+
+  // 클래스의 이름을 바꾸는 방법 .classList.add와 remove를 사용하자!
+  // reduce()의 개념을 어느정도는 알았지만 더 자세히 알아야됨
+  // Date()와 new Date()의 차이 => Date는 String이고, new Date()는 element
+  // 하나의 태그로 여러 화면을 조종하는 방법
+</script>
+</body>
+</html>
+
