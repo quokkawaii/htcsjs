@@ -1,24 +1,7 @@
 // html과 연결
 const $header = document.querySelector("#header");
 const $valueInp = document.querySelector("#valueInp");
-const $clean = document.querySelector("#clean",()=>{
-  value1 = "";
-  value2 = "";
-  operator = "";
 
-  intV1 = 0;
-  intV2 = 0;
-  resultValue = 0;
-
-  $valueInp.textContent ="";
-  $header.value = "";
-});
-const $equal = document.querySelector("#equal").addEventListener("click",(event)=>{
-  if(!value2 || !operator ) return;
-
-  view(event.target.textContent);
-
-});;
 
 // 변수
 let value1 = "";
@@ -123,3 +106,23 @@ const $div = document.querySelector("#div").addEventListener("click",opEvent);;
 const $mul = document.querySelector("#mul").addEventListener("click",opEvent);;
 const $plus = document.querySelector("#plus").addEventListener("click",opEvent);;
 const $min = document.querySelector("#min").addEventListener("click",opEvent);;
+
+const $clean = document.querySelector("#clean").addEventListener("click",()=>{
+  console.log("클릭");
+  value1 = "";
+  value2 = "";
+  operator = "";
+
+  intV1 = 0;
+  intV2 = 0;
+  resultValue = 0;
+
+  $valueInp.value ="";
+  $header.textContent = "";
+});
+const $equal = document.querySelector("#equal").addEventListener("click",(event)=>{
+  if(!value2 || !operator ) return;
+
+  view(event.target.textContent);
+
+});;
