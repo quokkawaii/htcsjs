@@ -119,6 +119,9 @@ const setRandArr = [];
 let bonus;
 let lotto;
 
+// 비동기 제어
+let timesuppressor = false;
+
 // 번호 추첨 이벤트
 $draw.addEventListener("click",async () => {
   // 오류 잡기
@@ -127,6 +130,9 @@ $draw.addEventListener("click",async () => {
 
   if(setUsers.length < 1) return;
   
+  if(timesuppressor) return;
+
+  timesuppressor = true;
   $input.value =  "";
   // 넘버 패드 삭제
   for(let i = 0; i < 5; i++){
