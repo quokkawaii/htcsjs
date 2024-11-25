@@ -1,0 +1,84 @@
+ td { 
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+} 
+
+#input{
+  width: 200px;
+  text-align: right;
+}
+#inputText{
+  width: 50px;
+}
+
+#draw{
+  width: 50px;
+}
+
+.colorYello {
+  display: inline-block;
+  color: goldenrod;
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.colorBlue {
+  display: inline-block;
+  color: blue;
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+}
+.colorRed {
+  display: inline-block;
+  color: red;
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+}
+.colorBlack {
+  display: inline-block;
+  color: black;
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+}
+.colorGreen {
+  display: inline-block;
+  color: green;
+  width: 40px;
+  height: 40px;
+  border : 1px black solid;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+}
+
+#color{
+  display: inline-block;
+  box-sizing: border-box;
+}
+/* 
+1 ~ 10 yello
+11 ~ 20 blue
+21 ~ 30 red
+31 ~ 40 black
+41 ~ 45 green
+ */
